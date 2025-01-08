@@ -1,0 +1,34 @@
+#probando
+
+#codigo para usar google drive , los modelos estaran guardados en drive
+from google.colab import drive
+drive.mount('/content/drive')
+
+#importaciones
+from diffusers import StableDiffusionPipeline
+from safetensors.torch import load_file
+import torch
+from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
+
+# Ruta del archivo safetensors en Google Drive
+model_path = "/content/drive/MyDrive/ponyDiffusionV6XL_v6StartWithThisOne.safetensors"
+lora_path = "/content/drive/MyDrive/Kodomo_no_Jikan-PDXL.safetensors"
+
+
+
+#cargando pipeline
+pipeline = StableDiffusionXLPipeline.from_single_file(model_path,torch_dtype=torch.float16).to("cuda")
+
+
+#cargando los pesos de lora
+lora_weights = load_file(lora_path)
+pipeline.load_lora_weights(lora_weights)
+
+
+  
+# Generar una imagen a partir de un prompt
+prompt = "A portrait of Rin Kokonoe, smile. She is making the peace sign with her fingers while looking directly at the camera. Her eyes are sparkling with happiness, and she is wearing a casual, modern outfit. The background is soft and blurred, emphasizing her joyful expression and playful pose."
+negative_prompt = "mutation"
+cantidad_imagenes = 3  # Puedes cambiar este valor a cualquier número
+image = pipeline(prompt,height=560, width=560,negative_prompt=negative_prompt, guidance_scale=7.5 ).images[0]  # Usamos guidance_scale aquí
+image.save("generated_image.png")
