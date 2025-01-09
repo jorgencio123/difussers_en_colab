@@ -1,4 +1,9 @@
 #probando
+#mas info sobre el pipeline de sdxl
+#https://huggingface.co/docs/diffusers/using-diffusers/sdxl
+
+
+
 
 #codigo para usar google drive , los modelos estaran guardados en drive
 from google.colab import drive
