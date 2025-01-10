@@ -32,8 +32,21 @@ pipeline.load_lora_weights(lora_weights)
 
   
 # Generar una imagen a partir de un prompt
-prompt = "A portrait of Rin Kokonoe, smile. She is making the peace sign with her fingers while looking directly at the camera. Her eyes are sparkling with happiness, and she is wearing a casual, modern outfit. The background is soft and blurred, emphasizing her joyful expression and playful pose."
+prompt = ("A portrait of Rin Kokonoe,wearing a school uniform. She is gently holding a love letter with both hands, her eyes slightly downcast in a bashful expression. The scene is set in a soft, warm light that gives her an endearing, gentle vibe. She has a delicate blush on her cheeks, and the background is soft and blurred, emphasizing her shy and sweet demeanor. Her posture is timid, adding to her charming, innocent appeal")
 negative_prompt = "mutation"
 cantidad_imagenes = 3  # Puedes cambiar este valor a cualquier número
-image = pipeline(prompt,height=560, width=560,negative_prompt=negative_prompt, guidance_scale=7.5 ).images[0]  # Usamos guidance_scale aquí
-image.save("generated_image.png")
+output_dir = "generated_images"  # Carpeta donde se guardarán las imágenes
+os.makedirs(output_dir, exist_ok=True)
+for i in range(cantidad_imagenes):
+    image = pipeline(
+        prompt=prompt,
+        height=744,
+        width=744,
+        negative_prompt=negative_prompt,
+        guidance_scale=7.0  # Ajusta la influencia del prompt
+    ).images[0]
+
+    # Guardar cada imagen con un nombre único
+    image.save(os.path.join(output_dir, f"generated_image_{i + 1}.png"))
+
+print(f"Se generaron {cantidad_imagenes} imágenes en la carpeta: {output_dir}")
